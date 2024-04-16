@@ -75,6 +75,7 @@ let g_selectedColor = [1.0,1.0,1.0,1.0];
 let g_selectedSize = 5;
 let g_selectedType = POINT;
 let g_segmentCount = 6;
+let g_selectedAlpha = 100;
 
 // Set up actions for HTML UI elements
 function addActionsForHtmlUI() {
@@ -87,12 +88,14 @@ function addActionsForHtmlUI() {
   document.getElementById("pointButton").onclick = function() {g_selectedType = POINT; };
   document.getElementById("triButton").onclick = function() {g_selectedType = TRIANGLE; };
   document.getElementById("circleButton").onclick = function() {g_selectedType = CIRCLE; };
+  document.getElementById("surpriseButton").onclick = function() {g_shapesList = []; renderAllShapes(); renderSurprise();};
 
   // Slider Events
   document.getElementById("redSlide").addEventListener('mouseup', function() {g_selectedColor[0] = this.value/100;});
   document.getElementById("greenSlide").addEventListener('mouseup', function() {g_selectedColor[1] = this.value/100;});
   document.getElementById("blueSlide").addEventListener('mouseup', function() {g_selectedColor[2] = this.value/100;});
-  document.getElementById("segSlide").addEventListener('mouseup', function() {g_selectedColor[2] = this.value/100;});
+  document.getElementById("alphaSlide").addEventListener('mouseup', function() {g_selectedColor[3] = this.value/100;});
+  
 
   // Size Slider Events
   document.getElementById("segSlide").addEventListener('mouseup', function() {g_segmentCount = this.value;});
@@ -155,6 +158,7 @@ function click(ev) {
   if (g_selectedType == CIRCLE) {
     point.segments = g_segmentCount;
   }
+  //console.log("pushing point with color: " + point.color);
   g_shapesList.push(point);
 
   /*// Store the coordinates to g_points array
@@ -197,6 +201,8 @@ function renderAllShapes(){
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   //var len = g_points.length;
   var len = g_shapesList.length;
@@ -219,3 +225,64 @@ function renderAllShapes(){
   }
   htmlElm.innerHTML = text;
 }*/
+
+// this is unholy but it works..
+function renderSurprise(){
+
+  let offsetX = -200;
+  let offsetY = -200;
+
+
+  // ground
+  pushCustomTriangle([0.64, 0.32, 0.16, 1.0], [[0,0],[0,120],[400,120]]);
+  pushCustomTriangle([0.64, 0.32, 0.16, 1.0], [[0,0],[400,0],[400,120]]);
+
+  // tent
+  pushCustomTriangle([0.2, 0.2, 0.2, 1.0], [[196,120],[204,120],[196,180]]);
+  pushCustomTriangle([0.2, 0.2, 0.2, 1.0], [[196,180],[204,120],[204,180]]);
+  pushCustomTriangle([0.3, 0.45, 0.25, 1.0], [[120,120],[140,120],[140,180]]);
+  pushCustomTriangle([0.3, 0.45, 0.25, 1.0], [[260,120],[260,180],[280,120]]);
+  pushCustomTriangle([0.3, 0.45, 0.25, 1.0], [[140,180],[260,180],[200,200]]);
+  pushCustomTriangle([0.3, 0.45, 0.25, 1.0], [[140,120],[200,180],[140,180]]);
+  pushCustomTriangle([0.3, 0.45, 0.25, 1.0], [[260,120],[260,180],[200,180]]);
+
+  
+  // beam
+  pushCustomTriangle([0.9, 0.75, 0.1, 1.0], [[0,400],[280,120],[400,120]]);
+
+  // celestial being
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[0,340],[10,340]]);
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[0,340],[10,340]]);
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[10,340],[40,350]]);
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[40,350],[50,360],]);
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[50,360],[60,390]]);
+  pushCustomTriangle([0.9, 0.9, 0.9, 1.0], [[0,400],[60,390],[60,400]]);
+
+  // celestial scars
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[0,390],[1,392],[3,395]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[5,360],[6,362],[8,365]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[14,360],[15,362],[17,365]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[17,350],[21,356],[26,363]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[23,370],[24,372],[25,375]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[33,380],[34,382],[36,385]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[38,390],[39,392],[41,395]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[42,350],[43,352],[45,355]]);
+  pushCustomTriangle([0.01, 0.01, 0.01, 1.0], [[48,390],[49,392],[51,395]]);
+
+  renderAllShapes();
+}
+
+function pushCustomTriangle(thisColor, theseCoords){
+  let offsetX = -200;
+  let offsetY = -200;
+
+  let point1 = new Triangle();
+  point1.position=[0,0,0];
+  point1.color=[thisColor[0], thisColor[1], thisColor[2], thisColor[3]];
+  point1.size=g_selectedSize;
+  point1.isCustom=true;
+  point1.customCoords[0] = [(theseCoords[0][0] + offsetX)/200, (theseCoords[0][1] + offsetY)/200];
+  point1.customCoords[1] = [(theseCoords[1][0] + offsetX)/200, (theseCoords[1][1] + offsetY)/200];
+  point1.customCoords[2] = [(theseCoords[2][0] + offsetX)/200, (theseCoords[2][1] + offsetY)/200];
+  g_shapesList.push(point1);
+}

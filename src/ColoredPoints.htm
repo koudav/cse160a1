@@ -21,7 +21,8 @@
     <p>
     <button type="button" id="pointButton">Square</button> <!--Internally this is just Point-->
     <button type="button" id="triButton">Triangle</button>
-    <button type="button" id="circleButton">Circle</button> 
+    <button type="button" id="circleButton">Circle</button>
+    <button type="button" id="surpriseButton">Surprise! (This is my drawing. You can add stars yourself if you'd like.)</button> 
 
     <p>
     Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlide">
@@ -29,12 +30,18 @@
     Green <input type="range" min="0" max="100" value="100" class="slider" id="greenSlide">
     <p>
     Blue <input type="range" min="0" max="100" value="100" class="slider" id="blueSlide">
+    <p>
+    Alpha (I'm cool! I'm <b>awesome</b>! I use a blending function that the webpage creator doesn't fully understand!!) <input type="range" min="0" max="100" value="100" class="slider" id="alphaSlide">
 
     <p>
     Size <input type="range" min="5" max="40" value="0" class="slider" id="sizeSlide">
     <p>
     Segments <input type="range" min="10" max="36" value="10" class="slider" id="segSlide">
-      
+
+    <p>
+    My drawing (prototype):
+    <p>
+    <img src="graph.png" alt ="My drawing (prototype)"></img>
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>

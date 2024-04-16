@@ -4,6 +4,8 @@ class Triangle{
       this.position = [0.0, 0.0, 0.0];
       this.color = [1.0, 1.0, 1.0, 1.0];
       this.size = 5.0;
+      this.isCustom = false; //overrides size to make custom triangle
+      this.customCoords = [[0.0, 0.0], [1.0, 0.0] [0.0, 1.0]]; //only used if override is true
     }
   
     render() {
@@ -22,8 +24,13 @@ class Triangle{
       gl.uniform1f(u_Size, size);
       // Draw
       //gl.drawArrays(gl.POINTS, 0, 1);
-      var d = this.size / 200.0; // delta
-      drawTriangle( [xy[0], xy[1], xy[0]+d, xy[1], xy[0], xy[1]+d] );
+      if (!this.isCustom) {
+        var d = this.size / 200.0; // delta
+        drawTriangle( [xy[0], xy[1], xy[0]+d, xy[1], xy[0], xy[1]+d] );
+      }
+      else {
+        drawTriangle( [this.customCoords[0][0], this.customCoords[0][1], this.customCoords[1][0], this.customCoords[1][1], this.customCoords[2][0], this.customCoords[2][1]] );
+      }
     }
   }
 
